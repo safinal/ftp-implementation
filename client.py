@@ -6,7 +6,7 @@ import pickle
 
 # SERVER_IP = sys.argv[1] 
 # SERVER_PORT = int(sys.argv[2])
-SERVER_IP = 'localhost'
+SERVER_IP = '127.0.0.1'
 SERVER_PORT = 12345
 BUFFER_SIZE = 1000
 FORMAT = "utf-8"
@@ -28,16 +28,17 @@ def put(file_name: str):
     if not os.path.isfile(file_path):
         print(f'\nYou do not have a file named "{file_name}" to upload on the server')
         return
-    client_socket.send("PUT".encode(FORMAT))
-    client_socket.send(file_name.encode(FORMAT))
+    client_socket.sendall("PUT".encode(FORMAT))
+    file_info = {"file_name": file_name}
     with open(file_path, 'rb') as file:   
-        send_obj(file.read())    
+        file_info["file_data"] = file.read()
+    send_obj(file_info)
 
 
 def get(file_name: str):
-    client_socket.send("GET".encode(FORMAT))
+    client_socket.sendall("GET".encode(FORMAT))
 
-    client_socket.send(file_name.encode(FORMAT))
+    client_socket.sendall(file_name.encode(FORMAT))
 
     response = recv_obj()
     if not response['isfile']:
@@ -49,7 +50,7 @@ def get(file_name: str):
 
 
 def list_files():
-    client_socket.send("LS".encode(FORMAT))
+    client_socket.sendall("LS".encode(FORMAT))
 
     server_files = recv_obj()
     print("\nList of server files:")
@@ -57,13 +58,16 @@ def list_files():
 
 
 def _quit():
-    client_socket.send("QUIT".encode(FORMAT))
+    client_socket.sendall("QUIT".encode(FORMAT))
+    client_socket.close()
     exit()
+
 
 def send_obj(obj):
     binary_data = pickle.dumps(obj)
     binary_data = f'{len(binary_data):<{HEADER_SIZE}}'.encode(FORMAT) + binary_data
-    client_socket.send(binary_data)
+    client_socket.sendall(binary_data)
+
 
 def recv_obj():
     full_binary_data = b''
@@ -79,6 +83,7 @@ def recv_obj():
         if len(full_binary_data)-HEADER_SIZE == msglen:
             return pickle.loads(full_binary_data[HEADER_SIZE:])
 
+
 print("""
 
 Call one of the following functions:
@@ -89,32 +94,33 @@ QUIT           : Exit
 """)
 
 
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-is_connected = connect_to_server()
-if not is_connected : exit()
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+    is_connected = connect_to_server()
+    if not is_connected : exit()
 
-while True:
-    prompt = input("\nFTP> ").strip().split()
-    
-    match prompt[0].upper():
-        case "PUT":
-            if len(prompt) != 2:
-                print('You must pass only 1 parameter to this function!')
-                continue
-            put(prompt[1])
-        case "GET":
-            if len(prompt) != 2:
-                print('You must pass only 1 parameter to this function!')
-                continue            
-            get(prompt[1])
-        case "LS":
-            if len(prompt) != 1:
-                print('This function does not accept any paramters!')
-                continue              
-            list_files()
-        case "QUIT":
-            if len(prompt) != 1:
-                print('This function does not accept any paramters!')
-                continue             
-            _quit()
-        case _ : print("Command not recognised; please try again")
+    while True:
+        prompt = input("\nFTP> ").strip().split()
+        if len(prompt) == 0 : prompt.append('')
+
+        match prompt[0].upper():
+            case "PUT":
+                if len(prompt) != 2:
+                    print('You must pass only 1 parameter to this function!')
+                    continue
+                put(prompt[1])
+            case "GET":
+                if len(prompt) != 2:
+                    print('You must pass only 1 parameter to this function!')
+                    continue            
+                get(prompt[1])
+            case "LS":
+                if len(prompt) != 1:
+                    print('This function does not accept any paramters!')
+                    continue              
+                list_files()
+            case "QUIT":
+                if len(prompt) != 1:
+                    print('This function does not accept any paramters!')
+                    continue             
+                _quit()
+            case _ : print("Command not recognised; please try again")
