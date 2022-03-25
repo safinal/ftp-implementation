@@ -4,13 +4,15 @@ import os
 import pickle
 
 
-# SERVER_IP = sys.argv[1] 
-# SERVER_PORT = int(sys.argv[2])
-SERVER_IP = '127.0.0.1'
-SERVER_PORT = 12345
 BUFFER_SIZE = 1000
 FORMAT = "utf-8"
-HEADER_SIZE = 10
+HEADER_SIZE = 20
+try:
+    SERVER_IP = sys.argv[1] 
+    SERVER_PORT = int(sys.argv[2])
+except:
+    print("\nrun the program like this:\n\npython client.py 127.0.0.1 <port-number>")
+    exit()
 
 
 def connect_to_server() -> bool:
@@ -24,7 +26,10 @@ def connect_to_server() -> bool:
 
 
 def put(file_name: str):
-    file_path = os.path.join(os.getcwd(), 'client_files', file_name)
+    client_dir_path = os.path.join(os.getcwd(), f'{client_socket.getsockname()[0]}, {client_socket.getsockname()[1]}')
+    if not os.path.isdir(client_dir_path):
+        os.mkdir(client_dir_path)
+    file_path = os.path.join(client_dir_path, file_name)
     if not os.path.isfile(file_path):
         print(f'\nYou do not have a file named "{file_name}" to upload on the server')
         return
@@ -44,8 +49,11 @@ def get(file_name: str):
     if not response['isfile']:
         print(f"\nThere is no file on the server with this name: {file_name}")
         return
+    client_dir_path = os.path.join(os.getcwd(), f'{client_socket.getsockname()[0]}, {client_socket.getsockname()[1]}')
+    if not os.path.isdir(client_dir_path):
+        os.mkdir(client_dir_path)
 
-    with open(os.path.join(os.getcwd(), 'client_files', file_name), 'wb') as file:
+    with open(os.path.join(client_dir_path, file_name), 'wb') as file:
         file.write(response['file_data'])
 
 
@@ -55,12 +63,6 @@ def list_files():
     server_files = recv_obj()
     print("\nList of server files:")
     print(*server_files, sep='\n', end='\n\n')
-
-
-def _quit():
-    client_socket.sendall("QUIT".encode(FORMAT))
-    client_socket.close()
-    exit()
 
 
 def send_obj(obj):
@@ -121,6 +123,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
             case "QUIT":
                 if len(prompt) != 1:
                     print('This function does not accept any paramters!')
-                    continue             
-                _quit()
+                    continue           
+                client_socket.sendall("QUIT".encode(FORMAT))
+                break
             case _ : print("Command not recognised; please try again")
