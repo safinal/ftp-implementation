@@ -2,7 +2,7 @@
 
 A simple File Transfer Protocol project using Socket Programming in Python implemented by Ali Safinal.
 
-On the client side, there is an interactive command line that provide these functions:
+On the client side, there is a Graphic User Interface that provide these functions:
 - `ls`: Show List of server files
 - `get <file-name>`: Download `<file-name>` file from the server
 - `put <file-name>`: Upload `<file-name>` file to the server 
