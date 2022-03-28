@@ -2,7 +2,7 @@ import socket
 import sys
 import os
 import pickle
-import threading
+from threading import Thread
 
 
 BUFFER_SIZE = 1000
@@ -67,7 +67,7 @@ def recv_obj(connection):
         if len(full_binary_data)-HEADER_SIZE == msglen:
             return pickle.loads(full_binary_data[HEADER_SIZE:])
 
-
+      
 def threaded_client(connection, client_address):
     with connection:
         print(f"\n[NEW CONNECTION] {client_address[0]}:{client_address[1]} got connected.")
@@ -85,13 +85,13 @@ def threaded_client(connection, client_address):
                     break
 
 
-print("\n[STARTING] Server is starting.")
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
     server_socket.bind((SERVER_IP, SERVER_PORT))
     server_socket.listen(5)
-    print(f"\n[LISTENING] Server is listening on {SERVER_IP}:{SERVER_PORT}")
+    
+    print(f"[STARTING] Server is starting.\n[LISTENING] Server is listening on {SERVER_IP}:{SERVER_PORT}")
 
     while True:
         connection, client_address = server_socket.accept()
-        threading.Thread(target=threaded_client, args=(connection, client_address)).start()
+        Thread(target=threaded_client, args=(connection, client_address)).start()
