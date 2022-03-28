@@ -1,2 +1,40 @@
-# ftp-implementation
-File Transfer Protocol implementation with Socket Programming
+# FTP Implementation with Socket Programming
+
+A simple File Transfer Protocol project using Socket Programming in Python implemented by Ali Safinal.
+
+On the client side, there is an interactive command line that provide these functions:
+- `ls`: Show List of server files
+- `get <file-name>`: Download `<file-name>` file from the server
+- `put <file-name>`: Upload `<file-name>` file to the server 
+- `quit`: Exit the client program
+
+## Requirements
+- Python version `3.10.0` or higher.
+
+That's it! Only python built-in libraries are used in this project. **There is no need to install any external package or library.**
+## How to Run
+1. Run the server
+    1. Open a Command Prompt/Terminal and change the working directory to the project directory (**don't skip this step**):
+        ```bash
+        cd ftp-implementation
+        ```
+    2. Enter the following command to run the server:
+        ```bash
+        # python server.py <port-number>
+        python server.py 12345
+        ```
+2. Run a client
+    1. Open another Command Prompt/Terminal and change the working directory to the project directory (**don't skip this step**):
+        ```bash
+        cd ftp-implementation
+        ```
+    2. Enter the following command to run a client:
+        ```bash
+        # python client.py 127.0.0.1 <port-number>
+        python client.py 127.0.0.1 12345
+        ```
+3. **(Optional)** You can repeat step 2 as many times as you want! **This project supports multi-clients feature.**
+
+Here is an example photo showing how to run and use the project:
+
+![example photo](https://s6.uupload.ir/files/safg_h1ia.png)
