@@ -14,9 +14,14 @@ On the client side, there is an interactive command line that provide these func
 That's it! Only python built-in libraries are used in this project. **There is no need to install any external package or library.**
 ## How to Run
 0. Install the requirements
-    ```bash
-    pip install -r requirements.txt
-    ```
+    1. Open a Command Prompt/Terminal and change the working directory to the project directory (**don't skip this step**):
+        ```bash
+        cd ftp-implementation
+        ```
+    2. Enter the following command:
+        ```bash
+        pip install -r requirements.txt
+        ```
 1. Run the server
     1. Open a Command Prompt/Terminal and change the working directory to the project directory (**don't skip this step**):
         ```bash
