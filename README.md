@@ -10,9 +10,13 @@ On the client side, there is an interactive command line that provide these func
 
 ## Requirements
 - Python version `3.10.0` or higher.
-
+- PyQt5 version `5.15.6`.
 That's it! Only python built-in libraries are used in this project. **There is no need to install any external package or library.**
 ## How to Run
+0. Install the requirements
+    ```bash
+    pip install -r requirements.txt
+    ```
 1. Run the server
     1. Open a Command Prompt/Terminal and change the working directory to the project directory (**don't skip this step**):
         ```bash
@@ -35,6 +39,6 @@ That's it! Only python built-in libraries are used in this project. **There is n
         ```
 3. **(Optional)** You can repeat step 2 as many times as you want! **This project supports multi-clients feature.**
 
-Here is an example photo showing how to run and use the project:
+Here is an example photo showing how does the program look like:
 
-![example photo](https://s6.uupload.ir/files/safg_h1ia.png)
+![example photo](https://s6.uupload.ir/files/gui_iqf0.png)
