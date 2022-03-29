@@ -11,7 +11,6 @@ On the client side, there is a Graphic User Interface that provide these functio
 ## Requirements
 - Python version `3.10.0` or higher.
 - PyQt5 version `5.15.6`.
-That's it! Only python built-in libraries are used in this project. **There is no need to install any external package or library.**
 ## How to Run
 0. Install the requirements
     1. Open a Command Prompt/Terminal and change the working directory to the project directory (**don't skip this step**):
